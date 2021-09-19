@@ -51,11 +51,6 @@ function addTodo(event) {
 }
 
 function deleteCheck(event) {
-    // console.log(event.target);
-    // console.log(event.target.parentElement);
-    // console.log(event.target.parentElement.childNodes);
-    // console.log(event.target.parentElement.childNodes[0]);
-    // console.log(event.target.parentElement.childNodes[0].innerText);
 
     const item = event.target;
     // DELETE TODO
@@ -164,3 +159,9 @@ function removeLocalTodos(todoDiv) {
      todos.splice(todos.indexOf(todoText), 1); /* remove this text from the todos array */
      localStorage.setItem('todos', JSON.stringify(todos));
 }
+
+/*
+ Fares Last Change
+  (Now Status is preserved For Each Task and It stores object of 
+    {taskName: , status: } for each task in the localStorage).
+*/
