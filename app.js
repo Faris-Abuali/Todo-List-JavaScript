@@ -51,6 +51,11 @@ function addTodo(event) {
 }
 
 function deleteCheck(event) {
+    // console.log(event.target);
+    // console.log(event.target.parentElement);
+    // console.log(event.target.parentElement.childNodes);
+    // console.log(event.target.parentElement.childNodes[0]);
+    // console.log(event.target.parentElement.childNodes[0].innerText);
 
     const item = event.target;
     // DELETE TODO
@@ -69,6 +74,23 @@ function deleteCheck(event) {
     if(item.classList[0] === 'complete-btn') {
         const todoDiv = item.parentElement;
         todoDiv.classList.toggle('completed');
+
+        let todos = [];
+        if(localStorage.getItem('todos') === null){
+            todos = [];
+        }
+        else{
+            todos = JSON.parse(localStorage.getItem('todos'));
+        }
+        // Change the status of this task in the localStorage
+        const todoText = todoDiv.children[0].innerText;
+        todos.forEach((elem) => {
+            if(elem.taskName === todoText){
+                // toggle the status of this task
+                elem.status = (elem.status == 'completed') ? 'uncompleted' : 'completed';
+            }
+        });
+        localStorage.setItem('todos', JSON.stringify(todos));
     }
 }
 function filterTodo(event) {
@@ -111,7 +133,7 @@ function saveLocalTodos(todo) {
     else{
         todos = JSON.parse(localStorage.getItem('todos'))
     }
-    todos.push(todo);
+    todos.push({taskName: todo, status: 'uncompleted'});
     localStorage.setItem('todos', JSON.stringify(todos));
 }
 function getTodos() {
@@ -129,7 +151,7 @@ function getTodos() {
         todoDiv.classList.add('todo');
         // Create li
         const newTodo = document.createElement('li');
-        newTodo.innerText = todo; 
+        newTodo.innerText = todo.taskName; 
         newTodo.classList.add('todo-item');
         todoDiv.appendChild(newTodo);
         // Check mark button
@@ -142,6 +164,10 @@ function getTodos() {
         trashButton.innerHTML = '<i class="fas fa-trash"></i>';
         trashButton.classList.add('trash-btn');
         todoDiv.appendChild(trashButton);
+        // Check is this current task is completed or not yet:
+        if(todo.status === 'completed'){
+            todoDiv.classList.add('completed');
+        }
         // Append the TodoDiv to the ul
         todoList.appendChild(todoDiv);      
      });
@@ -156,12 +182,16 @@ function removeLocalTodos(todoDiv) {
          todos = JSON.parse(localStorage.getItem('todos'))
      }
      const todoText = todoDiv.children[0].innerText;
-     todos.splice(todos.indexOf(todoText), 1); /* remove this text from the todos array */
+
+     let todoIndex;
+     todos.map((element, index, todos) => {
+         if(element.taskName === todoText){
+             todoIndex = index;
+         }
+     });
+     todos.splice(todoIndex, 1); /* remove this text from the todos array */
      localStorage.setItem('todos', JSON.stringify(todos));
 }
 
-/*
- Fares Last Change
-  (Now Status is preserved For Each Task and It stores object of 
-    {taskName: , status: } for each task in the localStorage).
-*/
+
+// FARES ABUALI
